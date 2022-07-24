@@ -5,6 +5,10 @@ export type AuthConfig = {
     accessToken: {
       secretKey: string;
       expiration: number;
+    },
+    refreshToken: {
+      secretKey: string;
+      expiration: number;
     }
   };
   google: {
@@ -24,6 +28,10 @@ export default (): { auth: AuthConfig } => ({
       accessToken: {
         secretKey: process.env.JWT_ACCESS_TOKEN_SECRET_KEY,
         expiration: parseInt(process.env.JWT_ACCESS_TOKEN_EXPIRATION)
+      },
+      refreshToken: {
+        secretKey: process.env.JWT_REFRESH_TOKEN_SECRET_KEY,
+        expiration: parseInt(process.env.JWT_REFRESH_TOKEN_EXPIRATION)
       }
     },
     google: {
