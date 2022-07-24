@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { DatabaseConfig } from '../config/database.config';
+import { User } from '../users/entities/user.entity';
 
 /**
  * Database module
@@ -20,7 +21,7 @@ import { DatabaseConfig } from '../config/database.config';
           username: dbConfig.user,
           password: dbConfig.password,
           database: dbConfig.name,
-          entities: [],
+          entities: [User],
           namingStrategy: new SnakeNamingStrategy(),
           synchronize: env !== 'production',
           dropSchema: env === 'test',
