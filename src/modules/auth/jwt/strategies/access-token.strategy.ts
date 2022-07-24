@@ -13,9 +13,9 @@ import { AuthConfig } from '../../../config/auth.config';
 @Injectable()
 export class AccessTokenStrategy extends PassportStrategy(Strategy, 'access-token') {
 
-  private readonly userService: UserService; // TODO Create users service and use it here
+  private readonly userService: any; // TODO Create users service and use it here
 
-  public constructor(configService: ConfigService, userService: UserService) {
+  public constructor(configService: ConfigService, userService: any) {
     const config = configService.get<AuthConfig>('auth').jwt.accessToken;
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
