@@ -4,6 +4,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AccessTokenPayload } from '../../../../utils/types';
 import { AuthConfig } from '../../../config/auth.config';
+import { UserService } from '../../../users/user.service';
 
 /**
  * Access token passport strategy.
