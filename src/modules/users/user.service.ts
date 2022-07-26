@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import _ from 'lodash';
 import { EntityNotFoundException } from '../../global/exceptions/entity.exception';
 import { CreateUserDto, UpdateUserDto } from './entities/user.dto';
@@ -13,7 +14,7 @@ export class UserService {
   
   private readonly userRepo: UserRepository;
 
-  public constructor(userRepo: UserRepository) {
+  public constructor(@InjectRepository(User) userRepo: UserRepository) {
     this.userRepo = userRepo;
   }
 
