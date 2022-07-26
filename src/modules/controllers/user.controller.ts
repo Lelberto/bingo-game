@@ -24,7 +24,7 @@ export class UserController {
     }
   }
 
-  @Get('/:username')
+  @Get(':username')
   public async findByUsername(@Param('username', UsernameToUserPipe) user: User) {
     return {
       user
