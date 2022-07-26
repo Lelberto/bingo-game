@@ -22,6 +22,6 @@ export class UsernameToUserPipe implements PipeTransform<string, Promise<User>> 
     if (metadata.type === 'param') {
       return await this.userService.findByUsername(username);
     }
-    throw new Error(`Incorrect use of ${this.constructor.name}`);
+    throw new Error(`${this.constructor.name} can only be used with @Param()`);
   }
 }
