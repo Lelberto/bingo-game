@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { Action } from '../actions/entities/action.entity';
 import { DatabaseConfig } from '../config/database.config';
+import { Game } from '../games/entities/game.entity';
 import { User } from '../users/entities/user.entity';
 
 /**
@@ -22,7 +23,7 @@ import { User } from '../users/entities/user.entity';
           username: dbConfig.user,
           password: dbConfig.password,
           database: dbConfig.name,
-          entities: [User, Action],
+          entities: [User, Game, Action],
           namingStrategy: new SnakeNamingStrategy(),
           synchronize: env !== 'production',
           dropSchema: env === 'test',
