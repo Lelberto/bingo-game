@@ -4,6 +4,7 @@ import { CreateActionDto } from '../actions/entities/action.dto';
 import { AccessTokenAuthGuard } from '../auth/jwt/guards/access-token-auth.guard';
 import { CreateGameDto } from '../games/entities/game.dto';
 import { Game } from '../games/entities/game.entity';
+import { GamePlayerService } from '../games/game-player.service';
 import { GameService } from '../games/game.service';
 import { IdToGamePipe } from '../games/pipes/id-to-game.pipe';
 import { ReqUser } from '../users/decorators/req-user.decorator';
@@ -18,10 +19,12 @@ import { User } from '../users/entities/user.entity';
 export class GameController {
 
   private readonly gameService: GameService;
+  private readonly gamePlayerService: GamePlayerService;
   private readonly actionService: ActionService;
 
-  public constructor(gameService: GameService, actionService: ActionService) {
+  public constructor(gameService: GameService, gamePlayerService: GamePlayerService, actionService: ActionService) {
     this.gameService = gameService;
+    this.gamePlayerService = gamePlayerService;
     this.actionService = actionService;
   }
 
@@ -44,6 +47,13 @@ export class GameController {
   public async findById(@Param('id', IdToGamePipe) game: Game) {
     return {
       game
+    };
+  }
+
+  @Get(':id/players')
+  public async findPlayers(@Param('id', IdToGamePipe) game: Game) {
+    return {
+      players: await this.gamePlayerService.findByGame(game)
     };
   }
 

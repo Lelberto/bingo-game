@@ -2,9 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityNotFoundException } from '../../global/exceptions/entity.exception';
 import { User } from '../users/entities/user.entity';
+import { GamePlayerRole } from './entities/game-player.entity';
 import { CreateGameDto } from './entities/game.dto';
 import { Game } from './entities/game.entity';
 import { GameRepository } from './entities/game.repository';
+import { GamePlayerService } from './game-player.service';
 
 /**
  * Game service
@@ -13,9 +15,11 @@ import { GameRepository } from './entities/game.repository';
 export class GameService {
 
   private readonly gameRepo: GameRepository;
+  private readonly gamePlayerService: GamePlayerService;
 
-  public constructor(@InjectRepository(Game) gameRepo: GameRepository) {
+  public constructor(@InjectRepository(Game) gameRepo: GameRepository, gamePlayerService: GamePlayerService) {
     this.gameRepo = gameRepo;
+    this.gamePlayerService = gamePlayerService;
   }
 
   /**
@@ -27,8 +31,10 @@ export class GameService {
    * @async
    */
   public async create(dto: CreateGameDto, author: User): Promise<Game> {
-    const game = this.gameRepo.create({ ...dto, authorId: author.id });
-    return await this.gameRepo.save(game);
+    let game = this.gameRepo.create({ ...dto, authorId: author.id });
+    game = await this.gameRepo.save(game);
+    await this.gamePlayerService.create(author, game, GamePlayerRole.MANAGER);
+    return game;
   }
 
   /**
