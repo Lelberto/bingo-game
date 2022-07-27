@@ -8,7 +8,6 @@ import { GameService } from '../games/game.service';
 import { IdToGamePipe } from '../games/pipes/id-to-game.pipe';
 import { ReqUser } from '../users/decorators/req-user.decorator';
 import { User } from '../users/entities/user.entity';
-import { UserService } from '../users/user.service';
 
 /**
  * Game controller
@@ -20,12 +19,10 @@ export class GameController {
 
   private readonly gameService: GameService;
   private readonly actionService: ActionService;
-  private readonly userService: UserService;
 
-  public constructor(gameService: GameService, actionService: ActionService, userService: UserService) {
+  public constructor(gameService: GameService, actionService: ActionService) {
     this.gameService = gameService;
     this.actionService = actionService;
-    this.userService = userService;
   }
 
   @Post()
