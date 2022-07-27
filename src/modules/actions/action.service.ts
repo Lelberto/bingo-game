@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityNotFoundException } from '../../global/exceptions/entity.exception';
 import { Game } from '../games/entities/game.entity';
@@ -24,15 +24,19 @@ export class ActionService {
    * 
    * @param dto DTO
    * @param author Author
-   * @param target Target user
    * @param game Game
    * @returns Created action
    * @async
    */
-  public async create(dto: CreateActionDto, author: User, target: User, game: Game): Promise<Action> {
-    const action = this.actionRepo.create({ ...dto, authorId: author.id, targetId: target.id, gameId: game.id });
-    await this.actionRepo.save(action);
-    return action;
+  public async create(dto: CreateActionDto, author: User, game: Game): Promise<Action> {
+    try {
+      const action = this.actionRepo.create({ ...dto, authorId: author.id, gameId: game.id });
+      await this.actionRepo.save(action);
+      return action;
+    } catch (err) {
+      // TODO Make this error handling better (here is when the target ID is invalid / not found)
+      throw new BadRequestException('Invalid data');
+    }
   }
 
   /**
