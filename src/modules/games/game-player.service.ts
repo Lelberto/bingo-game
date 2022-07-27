@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../users/entities/user.entity';
+import { UpdateGamePlayerDto } from './entities/game-player.dto';
 import { GamePlayer, GamePlayerRole } from './entities/game-player.entity';
 import { GamePlayerRepository } from './entities/game-player.repository';
 import { Game } from './entities/game.entity';
@@ -40,5 +41,35 @@ export class GamePlayerService {
    */
   public async findByGame(game: Game): Promise<GamePlayer[]> {
     return await this.gamePlayerRepo.find({ where: { gameId: game.id } });
+  }
+
+  /**
+   * Finds player by user and game
+   * 
+   * @param game Game
+   * @param user User
+   * @returns Player
+   * @async
+   */
+  public async findOneByGame(game: Game, user: User): Promise<GamePlayer> {
+    const gamePlayer = await this.gamePlayerRepo.findOne({ where: { gameId: game.id, userId: user.id } });
+    if (!gamePlayer) {
+      throw new NotFoundException('Game player not found');
+    }
+    return gamePlayer;
+  }
+
+  /**
+   * Updates a game player
+   * 
+   * @param gamePlayer Game player
+   * @param dto DTO
+   * @returns Updated game player
+   */
+  public async update(gamePlayer: GamePlayer, dto: UpdateGamePlayerDto, authGamePlayer: GamePlayer) {
+    if (authGamePlayer.role !== GamePlayerRole.MANAGER) {
+      throw new UnauthorizedException('Only managers can update the game');
+    }
+    return await this.gamePlayerRepo.update(gamePlayer, dto);
   }
 }
