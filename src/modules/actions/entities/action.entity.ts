@@ -1,4 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Game } from '../../games/entities/game.entity';
 import { User } from '../../users/entities/user.entity';
 
 /**
@@ -31,4 +32,10 @@ export class Action {
 
   @ManyToOne(() => User)
   public target: User;
+
+  @Column('uuid')
+  public gameId: string;
+
+  @ManyToOne(() => Game)
+  public game: Game;
 }
