@@ -3,14 +3,12 @@ import { User } from '../entities/user.entity';
 import { UserService } from '../user.service';
 
 /**
- * Username to user pipe
+ * Resolve an user by username
  * 
- * Used to transform the `:username` parameter to the corresponding user.
- * 
- * This pipe can be used with `@Param()`.
+ * This pipe is used with `@Param('username')`.
  */
 @Injectable()
-export class UsernameToUserPipe implements PipeTransform<string, Promise<User>> {
+export class ResolveUserPipe implements PipeTransform<string, Promise<User>> {
   
   private readonly userService: UserService;
 
