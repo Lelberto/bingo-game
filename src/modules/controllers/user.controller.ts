@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { User } from '../users/entities/user.entity';
-import { UsernameToUserPipe } from '../users/pipes/username-to-user.pipe';
+import { ResolveUserPipe } from '../users/pipes/resolve-user.pipe';
 import { UserService } from '../users/user.service';
 
 /**
@@ -25,7 +25,7 @@ export class UserController {
   }
 
   @Get(':username')
-  public async findByUsername(@Param('username', UsernameToUserPipe) user: User) {
+  public async findByUsername(@Param('username', ResolveUserPipe) user: User) {
     return {
       user
     }
