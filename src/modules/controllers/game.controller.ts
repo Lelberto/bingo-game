@@ -60,7 +60,7 @@ export class GameController {
     };
   }
 
-  @Get(':gameId/join')
+  @Post(':gameId/join')
   @UseGuards(AccessTokenAuthGuard)
   public async join(@Param('gameId', ResolveGamePipe) game: Game, @ReqUser() user: User) {
     return {
