@@ -71,9 +71,7 @@ export class GameController {
   @Patch(':gameId/players/:username')
   @UseGuards(AccessTokenAuthGuard)
   public async updatePlayer(@Param(ResolveGamePlayerPipe) gamePlayer: GamePlayer, @Param('gameId', ResolveGamePipe) game: Game, @ReqUser() authUser: User, @Body() dto: UpdateGamePlayerDto) {
-    return {
-      gamePlayer: await this.gamePlayerService.update(gamePlayer, dto, await this.gamePlayerService.findOneByGame(game, authUser))
-    };
+    await this.gamePlayerService.update(gamePlayer, dto, await this.gamePlayerService.findOneByGame(game, authUser));
   }
 
   @Post(':gameId/actions')
