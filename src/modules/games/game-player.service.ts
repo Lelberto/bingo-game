@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../users/entities/user.entity';
 import { UpdateGamePlayerDto } from './entities/game-player.dto';
@@ -71,5 +71,35 @@ export class GamePlayerService {
       throw new UnauthorizedException('Only managers can update the game');
     }
     await this.gamePlayerRepo.update(gamePlayer, dto);
+  }
+
+  /**
+   * Joins a game
+   * 
+   * @param game Game
+   * @param user User
+   * @returns Joined game player
+   */
+  public async join(game: Game, user: User): Promise<GamePlayer> {
+    if (this.exists(game, user)) {
+      throw new BadRequestException('User already joined the game');
+    }
+    return this.create(user, game);
+  }
+
+  /**
+   * Checks if an user exists in a game
+   * 
+   * @param game Game
+   * @param user User
+   * @returns True if the user exists in the game
+   */
+  public async exists(game: Game, user: User): Promise<boolean> {
+    try {
+      await this.findOneByGame(game, user);
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
 }

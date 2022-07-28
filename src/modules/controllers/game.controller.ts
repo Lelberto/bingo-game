@@ -64,7 +64,7 @@ export class GameController {
   @UseGuards(AccessTokenAuthGuard)
   public async join(@Param('gameId', ResolveGamePipe) game: Game, @ReqUser() user: User) {
     return {
-      gamePlayer: await this.gamePlayerService.create(user, game)
+      gamePlayer: await this.gamePlayerService.join(game, user)
     };
   }
 
