@@ -3,14 +3,12 @@ import { ActionService } from '../action.service';
 import { Action } from '../entities/action.entity';
 
 /**
- * ID to action pipe
+ * Resolve an action by ID
  * 
- * Used to transform the `:id` parameter to the corresponding action.
- * 
- * This pipe can be used with `@Param()`.
+ * This pipe is used with `@Param('actionId')`.
  */
 @Injectable()
-export class IdToActionPipe implements PipeTransform<string, Promise<Action>> {
+export class ResolveActionPipe implements PipeTransform<string, Promise<Action>> {
   
   private readonly actionService: ActionService;
 
@@ -18,9 +16,9 @@ export class IdToActionPipe implements PipeTransform<string, Promise<Action>> {
     this.actionService = actionService;
   }
 
-  public async transform(id: string, metadata: ArgumentMetadata): Promise<Action> {
+  public async transform(actionId: string, metadata: ArgumentMetadata): Promise<Action> {
     if (metadata.type === 'param') {
-      return await this.actionService.findById(id);
+      return await this.actionService.findById(actionId);
     }
     throw new Error(`${this.constructor.name} can only be used with @Param()`);
   }

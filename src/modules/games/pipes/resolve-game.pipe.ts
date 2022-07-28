@@ -3,14 +3,12 @@ import { Game } from '../entities/game.entity';
 import { GameService } from '../game.service';
 
 /**
- * ID to game pipe
+ * Resolve a game by ID
  * 
- * Used to transform the `:id` parameter to the corresponding game.
- * 
- * This pipe can be used with `@Param()`.
+ * This pipe is used with `@Param('gameId')`.
  */
 @Injectable()
-export class IdToGamePipe implements PipeTransform<string, Promise<Game>> {
+export class ResolveGamePipe implements PipeTransform<string, Promise<Game>> {
 
   private readonly gameService: GameService;
 
@@ -18,9 +16,9 @@ export class IdToGamePipe implements PipeTransform<string, Promise<Game>> {
     this.gameService = gameService;
   }
 
-  public async transform(id: string, metadata: ArgumentMetadata): Promise<Game> {
+  public async transform(gameId: string, metadata: ArgumentMetadata): Promise<Game> {
     if (metadata.type === 'param') {
-      return await this.gameService.findById(id);
+      return await this.gameService.findById(gameId);
     }
     throw new Error(`${this.constructor.name} can only be used with @Param()`);
   }

@@ -11,10 +11,10 @@ import { GameService } from '../game.service';
  * 
  * Required parameters :
  * - `gameId`: Game ID
- * - `userId`: User ID
+ * - `username`: User username
  */
 @Injectable()
-export class ResolveGamePlayerPipe implements PipeTransform<{ gameId: string, userId: string }, Promise<GamePlayer>> {
+export class ResolveGamePlayerPipe implements PipeTransform<{ gameId: string, username: string }, Promise<GamePlayer>> {
 
   private readonly gamePlayerService: GamePlayerService;
   private readonly gameService: GameService;
@@ -26,11 +26,11 @@ export class ResolveGamePlayerPipe implements PipeTransform<{ gameId: string, us
     this.userService = userService;
   }
 
-  public async transform(value: { gameId: string, userId: string }, metadata: ArgumentMetadata): Promise<GamePlayer> {
+  public async transform(value: { gameId: string, username: string }, metadata: ArgumentMetadata): Promise<GamePlayer> {
     if (metadata.type === 'param') {
       return await this.gamePlayerService.findOneByGame(
         await this.gameService.findById(value.gameId),
-        await this.userService.findById(value.userId)
+        await this.userService.findByUsername(value.username)
       );
     }
     throw new Error(`${this.constructor.name} can only be used with @Param()`);

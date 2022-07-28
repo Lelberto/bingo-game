@@ -9,7 +9,7 @@ import { Game } from '../games/entities/game.entity';
 import { GamePlayerService } from '../games/game-player.service';
 import { GameService } from '../games/game.service';
 import { ResolveGamePlayerPipe } from '../games/pipes/resolve-game-player.pipe';
-import { IdToGamePipe } from '../games/pipes/id-to-game.pipe';
+import { ResolveGamePipe } from '../games/pipes/resolve-game.pipe';
 import { ReqUser } from '../users/decorators/req-user.decorator';
 import { User } from '../users/entities/user.entity';
 
@@ -46,39 +46,37 @@ export class GameController {
     };
   }
 
-  @Get(':id')
-  public async findById(@Param('id', IdToGamePipe) game: Game) {
+  @Get(':gameId')
+  public async findById(@Param('gameId', ResolveGamePipe) game: Game) {
     return {
       game
     };
   }
 
-  @Get(':id/players')
-  public async findPlayers(@Param('id', IdToGamePipe) game: Game) {
+  @Get(':gameId/players')
+  public async findPlayers(@Param('gameId', ResolveGamePipe) game: Game) {
     return {
       gamePlayers: await this.gamePlayerService.findByGame(game)
     };
   }
 
-  @Get(':id/join')
+  @Get(':gameId/join')
   @UseGuards(AccessTokenAuthGuard)
-  public async join(@Param('id', IdToGamePipe) game: Game, @ReqUser() user: User) {
+  public async join(@Param('gameId', ResolveGamePipe) game: Game, @ReqUser() user: User) {
     return {
       gamePlayer: await this.gamePlayerService.create(user, game)
     };
   }
 
-  @Patch(':gameId/players/:userId') // TODO Change "id" to "gameId" for all endpoints, and all "userId" to "username" :)
+  @Patch(':gameId/players/:username')
   @UseGuards(AccessTokenAuthGuard)
-  public async updatePlayer(@Param(ResolveGamePlayerPipe) gamePlayer: GamePlayer, @Param('id', IdToGamePipe) game: Game, @ReqUser() authUser: User, @Body() dto: UpdateGamePlayerDto) {
-    return {
-      gamePlayer: await this.gamePlayerService.update(gamePlayer, dto, await this.gamePlayerService.findOneByGame(game, authUser))
-    };
+  public async updatePlayer(@Param(ResolveGamePlayerPipe) gamePlayer: GamePlayer, @Param('gameId', ResolveGamePipe) game: Game, @ReqUser() authUser: User, @Body() dto: UpdateGamePlayerDto) {
+    await this.gamePlayerService.update(gamePlayer, dto, await this.gamePlayerService.findOneByGame(game, authUser));
   }
 
-  @Post(':id/actions')
+  @Post(':gameId/actions')
   @UseGuards(AccessTokenAuthGuard)
-  public async createAction(@Param('id', IdToGamePipe) game: Game, @ReqUser() author: User, @Body() dto: CreateActionDto) {
+  public async createAction(@Param('gameId', ResolveGamePipe) game: Game, @ReqUser() author: User, @Body() dto: CreateActionDto) {
     return {
       action: await this.actionService.create(dto, author, game)
     };

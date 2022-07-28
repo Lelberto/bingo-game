@@ -1,7 +1,7 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { ActionService } from '../actions/action.service';
 import { Action } from '../actions/entities/action.entity';
-import { IdToActionPipe } from '../actions/pipes/IdToAction.pipe';
+import { ResolveActionPipe } from '../actions/pipes/resolve-ation.pipe';
 
 /**
  * Action controller
@@ -24,8 +24,8 @@ export class ActionController {
     }
   }
 
-  @Get(':id')
-  public async findById(@Param('id', IdToActionPipe) action: Action) {
+  @Get(':actionId')
+  public async findById(@Param('actionId', ResolveActionPipe) action: Action) {
     return {
       action
     }

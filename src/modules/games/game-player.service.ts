@@ -66,10 +66,10 @@ export class GamePlayerService {
    * @param dto DTO
    * @returns Updated game player
    */
-  public async update(gamePlayer: GamePlayer, dto: UpdateGamePlayerDto, authGamePlayer: GamePlayer) {
+  public async update(gamePlayer: GamePlayer, dto: UpdateGamePlayerDto, authGamePlayer: GamePlayer): Promise<void> {
     if (authGamePlayer.role !== GamePlayerRole.MANAGER) {
       throw new UnauthorizedException('Only managers can update the game');
     }
-    return await this.gamePlayerRepo.update(gamePlayer, dto);
+    await this.gamePlayerRepo.update(gamePlayer, dto);
   }
 }
