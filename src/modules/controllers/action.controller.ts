@@ -24,8 +24,8 @@ export class ActionController {
     }
   }
 
-  @Get(':id')
-  public async findById(@Param('id', IdToActionPipe) action: Action) {
+  @Get(':actionId')
+  public async findById(@Param('actionId', IdToActionPipe) action: Action) {
     return {
       action
     }
