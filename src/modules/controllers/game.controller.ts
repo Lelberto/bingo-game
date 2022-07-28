@@ -46,39 +46,39 @@ export class GameController {
     };
   }
 
-  @Get(':id')
-  public async findById(@Param('id', IdToGamePipe) game: Game) {
+  @Get(':gameId')
+  public async findById(@Param('gameId', IdToGamePipe) game: Game) {
     return {
       game
     };
   }
 
-  @Get(':id/players')
-  public async findPlayers(@Param('id', IdToGamePipe) game: Game) {
+  @Get(':gameId/players')
+  public async findPlayers(@Param('gameId', IdToGamePipe) game: Game) {
     return {
       gamePlayers: await this.gamePlayerService.findByGame(game)
     };
   }
 
-  @Get(':id/join')
+  @Get(':gameId/join')
   @UseGuards(AccessTokenAuthGuard)
-  public async join(@Param('id', IdToGamePipe) game: Game, @ReqUser() user: User) {
+  public async join(@Param('gameId', IdToGamePipe) game: Game, @ReqUser() user: User) {
     return {
       gamePlayer: await this.gamePlayerService.create(user, game)
     };
   }
 
-  @Patch(':gameId/players/:userId') // TODO Change "id" to "gameId" for all endpoints, and all "userId" to "username" :)
+  @Patch(':gameId/players/:userId')
   @UseGuards(AccessTokenAuthGuard)
-  public async updatePlayer(@Param(ResolveGamePlayerPipe) gamePlayer: GamePlayer, @Param('id', IdToGamePipe) game: Game, @ReqUser() authUser: User, @Body() dto: UpdateGamePlayerDto) {
+  public async updatePlayer(@Param(ResolveGamePlayerPipe) gamePlayer: GamePlayer, @Param('gameId', IdToGamePipe) game: Game, @ReqUser() authUser: User, @Body() dto: UpdateGamePlayerDto) {
     return {
       gamePlayer: await this.gamePlayerService.update(gamePlayer, dto, await this.gamePlayerService.findOneByGame(game, authUser))
     };
   }
 
-  @Post(':id/actions')
+  @Post(':gameId/actions')
   @UseGuards(AccessTokenAuthGuard)
-  public async createAction(@Param('id', IdToGamePipe) game: Game, @ReqUser() author: User, @Body() dto: CreateActionDto) {
+  public async createAction(@Param('gameId', IdToGamePipe) game: Game, @ReqUser() author: User, @Body() dto: CreateActionDto) {
     return {
       action: await this.actionService.create(dto, author, game)
     };
