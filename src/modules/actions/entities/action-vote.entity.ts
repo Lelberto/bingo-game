@@ -12,7 +12,7 @@ import { Action } from './action.entity';
 export class ActionVote {
 
   @PrimaryColumn('uuid')
-  public actionId: number;
+  public actionId: string;
 
   @ManyToOne(() => Action)
   public action: Action;
