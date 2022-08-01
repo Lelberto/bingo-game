@@ -28,7 +28,7 @@ export class ActionVoteService {
    * @async
    */
   public async vote(action: Action, user: User, value: boolean) {
-    if (this.hasVoted(action, user)) {
+    if (await this.hasVoted(action, user)) {
       throw new BadRequestException('You have already voted for this action');
     }
     const actionVote = this.actionVoteRepo.create({ actionId: action.id, userId: user.id, value });
