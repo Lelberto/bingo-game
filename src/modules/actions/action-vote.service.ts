@@ -28,6 +28,7 @@ export class ActionVoteService {
    * @async
    */
   public async vote(action: Action, user: User, value: boolean) {
+    // TODO Check if the game attached to this action is running and throw error if true (use action.game)
     if (await this.hasVoted(action, user)) {
       throw new BadRequestException('You have already voted for this action');
     }
