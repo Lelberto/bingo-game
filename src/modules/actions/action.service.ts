@@ -24,17 +24,18 @@ export class ActionService {
    * 
    * @param dto DTO
    * @param author Author
+   * @param target Target
    * @param game Game
    * @returns Created action
    * @async
    */
-  public async create(dto: CreateActionDto, author: User, game: Game): Promise<Action> {
+  public async create(dto: CreateActionDto, author: User, target: User, game: Game): Promise<Action> {
     try {
-      const action = this.actionRepo.create({ ...dto, authorId: author.id, gameId: game.id });
+      const action = this.actionRepo.create({ ...dto, authorId: author.id, targetId: target.id, gameId: game.id });
       await this.actionRepo.save(action);
       return action;
     } catch (err) {
-      // TODO Make this error handling better (here is when the target ID is invalid / not found)
+      // TODO Make this error handling better (here is when the target username is invalid / not found)
       throw new BadRequestException('Invalid data');
     }
   }

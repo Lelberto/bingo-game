@@ -10,9 +10,6 @@ export class CreateActionDto {
   
   @IsString()
   result: string;
-
-  @IsString()
-  targetId: string;
 }
 
 /**
