@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ActionService } from '../actions/action.service';
 import { CreateActionDto } from '../actions/entities/action.dto';
 import { AccessTokenAuthGuard } from '../auth/jwt/guards/access-token-auth.guard';
@@ -12,6 +12,7 @@ import { ResolveGamePlayerPipe } from '../games/pipes/resolve-game-player.pipe';
 import { ResolveGamePipe } from '../games/pipes/resolve-game.pipe';
 import { ReqUser } from '../users/decorators/req-user.decorator';
 import { User } from '../users/entities/user.entity';
+import { ResolveUserPipe } from '../users/pipes/resolve-user.pipe';
 
 /**
  * Game controller
@@ -76,9 +77,9 @@ export class GameController {
 
   @Post(':gameId/actions')
   @UseGuards(AccessTokenAuthGuard)
-  public async createAction(@Param('gameId', ResolveGamePipe) game: Game, @ReqUser() author: User, @Body() dto: CreateActionDto) {
+  public async createAction(@Param('gameId', ResolveGamePipe) game: Game, @ReqUser() author: User, @Query('target', ResolveUserPipe) target: User, @Body() dto: CreateActionDto) {
     return {
-      action: await this.actionService.create(dto, author, game)
+      action: await this.actionService.create(dto, author, target, game)
     };
   }
 }

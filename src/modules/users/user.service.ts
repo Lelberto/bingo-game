@@ -98,8 +98,8 @@ export class UserService {
    * @async
    */
   public async findByUsername(username: string): Promise<User> {
-    const user = await this.userRepo.findOne({ where: { username } });
-    if (!user) {
+    const user = await this.userRepo.findOneBy({ username });
+    if (!user || !username) {
       throw new EntityNotFoundException(User);
     }
     return user;

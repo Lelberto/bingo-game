@@ -4,8 +4,6 @@ import { UserService } from '../user.service';
 
 /**
  * Resolve an user by username
- * 
- * This pipe is used with `@Param('username')`.
  */
 @Injectable()
 export class ResolveUserPipe implements PipeTransform<string, Promise<User>> {
@@ -17,9 +15,6 @@ export class ResolveUserPipe implements PipeTransform<string, Promise<User>> {
   }
 
   public async transform(username: string, metadata: ArgumentMetadata): Promise<User> {
-    if (metadata.type === 'param') {
-      return await this.userService.findByUsername(username);
-    }
-    throw new Error(`${this.constructor.name} can only be used with @Param()`);
+    return await this.userService.findByUsername(username);
   }
 }

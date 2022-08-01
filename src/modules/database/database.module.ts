@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { ActionVote } from '../actions/entities/action-vote.entity';
 import { Action } from '../actions/entities/action.entity';
 import { DatabaseConfig } from '../config/database.config';
 import { GamePlayer } from '../games/entities/game-player.entity';
@@ -24,7 +25,7 @@ import { User } from '../users/entities/user.entity';
           username: dbConfig.user,
           password: dbConfig.password,
           database: dbConfig.name,
-          entities: [User, Game, GamePlayer, Action],
+          entities: [User, Game, GamePlayer, Action, ActionVote],
           namingStrategy: new SnakeNamingStrategy(),
           synchronize: env !== 'production',
           dropSchema: env === 'test',
