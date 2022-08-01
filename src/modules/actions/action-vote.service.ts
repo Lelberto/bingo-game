@@ -32,7 +32,7 @@ export class ActionVoteService {
     if (await this.hasVoted(action, user)) {
       throw new BadRequestException('You have already voted for this action');
     }
-    const actionVote = this.actionVoteRepo.create({ actionId: action.id, userId: user.id, value });
+    const actionVote = this.actionVoteRepo.create({ action, user, value });
     return await this.actionVoteRepo.save(actionVote);
   }
 
@@ -44,7 +44,7 @@ export class ActionVoteService {
    * @async
    */
   public async countVotes(action: Action) {
-    return await this.actionVoteRepo.countBy({ actionId: action.id });
+    return await this.actionVoteRepo.countBy({ action: { id: action.id } });
   }
 
   /**
@@ -55,7 +55,7 @@ export class ActionVoteService {
    * @async
    */
   public async countUpVotes(action: Action) {
-    return await this.actionVoteRepo.countBy({ actionId: action.id, value: true });
+    return await this.actionVoteRepo.countBy({ action: { id: action.id }, value: true });
   }
 
   /**
@@ -66,7 +66,7 @@ export class ActionVoteService {
    * @async
    */
   public async countDownVotes(action: Action) {
-    return await this.actionVoteRepo.countBy({ actionId: action.id, value: false });
+    return await this.actionVoteRepo.countBy({ action: { id: action.id }, value: false });
   }
 
   /**
@@ -77,6 +77,6 @@ export class ActionVoteService {
    * @returns True if the user has already voted for the action, false otherwise
    */
   public async hasVoted(action: Action, user: User) {
-    return await this.actionVoteRepo.findOneBy({ actionId: action.id, userId: user.id }) != null;
+    return await this.actionVoteRepo.findOneBy({ action: { id: action.id }, user: { id: user.id } }) != null;
   }
 }

@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Game } from '../../games/entities/game.entity';
 import { User } from '../../users/entities/user.entity';
+import { ActionVote } from './action-vote.entity';
 
 /**
  * Action entity
@@ -21,21 +22,15 @@ export class Action {
   })
   public result: string;
 
-  @Column('uuid')
-  public authorId: string;
-
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, user => user.authoredActions)
   public author: User;
 
-  @Column('uuid')
-  public targetId: string;
-
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, user => user.targetedActions)
   public target: User;
 
-  @Column('uuid')
-  public gameId: string;
-
-  @ManyToOne(() => Game)
+  @ManyToOne(() => Game, game => game.actions)
   public game: Game;
+
+  @OneToMany(() => ActionVote, vote => vote.action)
+  public votes: Promise<ActionVote[]>;
 }

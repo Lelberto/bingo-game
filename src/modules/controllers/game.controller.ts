@@ -57,7 +57,7 @@ export class GameController {
   @Get(':gameId/players')
   public async findPlayers(@Param('gameId', ResolveGamePipe) game: Game) {
     return {
-      gamePlayers: await this.gamePlayerService.findByGame(game)
+      gamePlayers: await game.players
     };
   }
 

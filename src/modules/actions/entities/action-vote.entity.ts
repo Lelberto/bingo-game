@@ -12,15 +12,11 @@ import { Action } from './action.entity';
 export class ActionVote {
 
   @PrimaryColumn('uuid')
-  public actionId: string;
-
-  @ManyToOne(() => Action)
+  @ManyToOne(() => Action, action => action.votes)
   public action: Action;
 
   @PrimaryColumn('uuid')
-  public userId: string;
-
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, user => user.votes)
   public user: User;
 
   @Column('boolean')

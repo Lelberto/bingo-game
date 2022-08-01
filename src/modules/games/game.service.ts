@@ -31,7 +31,7 @@ export class GameService {
    * @async
    */
   public async create(dto: CreateGameDto, author: User): Promise<Game> {
-    let game = this.gameRepo.create({ ...dto, authorId: author.id });
+    let game = this.gameRepo.create({ ...dto, author });
     game = await this.gameRepo.save(game);
     await this.gamePlayerService.create(author, game, GamePlayerRole.MANAGER);
     return game;

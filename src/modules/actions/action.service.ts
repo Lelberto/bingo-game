@@ -31,7 +31,7 @@ export class ActionService {
    */
   public async create(dto: CreateActionDto, author: User, target: User, game: Game): Promise<Action> {
     try {
-      const action = this.actionRepo.create({ ...dto, authorId: author.id, targetId: target.id, gameId: game.id });
+      const action = this.actionRepo.create({ ...dto, author, target, game });
       await this.actionRepo.save(action);
       return action;
     } catch (err) {
@@ -59,7 +59,7 @@ export class ActionService {
    * @async
    */
   public async findById(id: Action['id']): Promise<Action> {
-    const action = await this.actionRepo.findOne({ where: { id } });
+    const action = await this.actionRepo.findOneBy({ id });
     if (!action) {
       throw new EntityNotFoundException(Action);
     }
@@ -74,7 +74,7 @@ export class ActionService {
    * @async
    */
   public async update(action: Action, dto: UpdateActionDto): Promise<void> {
-    await this.actionRepo.update({ id: action.id }, dto);
+    await this.actionRepo.save({ ...action, ...dto });
   }
 
   /**

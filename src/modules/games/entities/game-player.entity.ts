@@ -18,15 +18,11 @@ export enum GamePlayerRole {
 export class GamePlayer {
 
   @PrimaryColumn('uuid')
-  public userId: string;
-
   @ManyToOne(() => User)
   public user: User;
 
   @PrimaryColumn('uuid')
-  public gameId: string;
-
-  @ManyToOne(() => Game)
+  @ManyToOne(() => Game, game => game.players)
   public game: Game;
 
   @Column({

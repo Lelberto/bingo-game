@@ -28,7 +28,7 @@ export class GamePlayerService {
    * @async
    */
   public async create(user: User, game: Game, role?: GamePlayerRole) {
-    const gamePlayer = this.gamePlayerRepo.create({ userId: user.id, gameId: game.id, role });
+    const gamePlayer = this.gamePlayerRepo.create({ user, game, role });
     return await this.gamePlayerRepo.save(gamePlayer);
   }
 
@@ -40,7 +40,7 @@ export class GamePlayerService {
    * @async
    */
   public async findByGame(game: Game): Promise<GamePlayer[]> {
-    return await this.gamePlayerRepo.find({ where: { gameId: game.id } });
+    return await this.gamePlayerRepo.findBy({ game: { id: game.id } });
   }
 
   /**
@@ -52,7 +52,7 @@ export class GamePlayerService {
    * @async
    */
   public async findOneByGame(game: Game, user: User): Promise<GamePlayer> {
-    const gamePlayer = await this.gamePlayerRepo.findOne({ where: { gameId: game.id, userId: user.id } });
+    const gamePlayer = await this.gamePlayerRepo.findOneBy({ game: { id: game.id }, user: { id: user.id } });
     if (!gamePlayer) {
       throw new NotFoundException('Game player not found');
     }
@@ -70,7 +70,7 @@ export class GamePlayerService {
     if (authGamePlayer.role !== GamePlayerRole.MANAGER) {
       throw new UnauthorizedException('Only managers can update the game');
     }
-    await this.gamePlayerRepo.update(gamePlayer, dto);
+    await this.gamePlayerRepo.save({ ...gamePlayer, ...dto });
   }
 
   /**
